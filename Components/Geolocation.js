@@ -76,6 +76,7 @@ var GeolocationExample = React.createClass({
     }).then(function () {
       Actions.getGeoLocation({username: _that.props.username})
     }).catch(function (e) {
+      console.log(e)
       _that.setState({
         error: "Error in saving data"
       })

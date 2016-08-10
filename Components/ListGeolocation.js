@@ -22,7 +22,8 @@ var {
   StyleSheet,
   Text,
   View,
-  ScrollView
+  ScrollView,
+  TouchableHighlight
 } = ReactNative;
 
 var GeolocationExample = React.createClass({
@@ -57,6 +58,30 @@ var GeolocationExample = React.createClass({
       })
   },
 
+  _deleteLocation: function (locationId) {
+    const that = this
+    fetch(this.hostUrl, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        locationId: locationId
+      })
+    }).then(function () {
+      const locations = that.state.locations.filter((location) => location._id != locationId)
+      that.setState({
+        locations: locations
+      })
+    }).catch(function (e) {
+      that.setState({
+        error: "Error in deleting data"
+      })
+    })
+  },
+
+
   render: function() {
     return (
       <ScrollView>
@@ -70,9 +95,14 @@ var GeolocationExample = React.createClass({
                 <View key={location._id} style={{padding: 10}}>
                   <Text>latidude: {location.latitude}</Text>
                   <Text>longitude: {location.longitude}</Text>
+                  <TouchableHighlight style={{marginTop: 10}} onPress={() => this._deleteLocation(location._id.toString())}>
+                    <Text style={styles.button}>
+                      Delete
+                    </Text>
+                  </TouchableHighlight>
                 </View>
               )
-            })
+            }.bind(this))
           }
         </View>
       </ScrollView>
